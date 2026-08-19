@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>{% block title %}ANDDE - Association Nationale du Don D'Engendrement{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        
+        {# Google Fonts: Epilogue for headings, Open Sans for body #}
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Epilogue:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+
+        {% block stylesheets %}
+            <link rel="stylesheet" href="{{ asset('bundles/babdevpagerfanta/css/pagerfanta.css') }}">
+        {% endblock %}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
+    </head>
+    <body>
+        <div class="site-wrapper">
+            <header class="site-header">
+                {% block header %}
+                    {% include 'layout/_header.html.twig' %}
+                {% endblock %}
+            </header>
+
+            <main class="main-content">
+                <div class="container py-5">
+                    {% block main_content %}
+                    {% endblock %}
+                </div>
+            </main>
+
+            <footer class="site-footer">
+                <div class="footer-inner">
+                    {% block footer %}
+                        {% include 'layout/_footer.html.twig' %}
+                    {% endblock %}
+                </div>
+            </footer>
+        </div>
+    </body>
+</html>

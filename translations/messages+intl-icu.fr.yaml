@@ -1,0 +1,4 @@
+global:
+  app_name: Symfony starter kit
+  title:
+    homepage: Accueil

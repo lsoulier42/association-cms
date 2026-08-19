@@ -1,0 +1,79 @@
+{% set current_url = app.request.requestUri %}
+{% set links = [] %}
+
+{% for category in menu_categories %}
+    {% if category.name == 'Actualités' %}
+        {% set category_link = {
+            'text': category.name,
+            'path': path('linkedin_post_index')
+        } %}
+        {% set links = links|merge([category_link]) %}
+    {% else %}
+        {% set subMenu = [] %}
+        {% for article in category.articles %}
+            {% set subMenu = subMenu|merge([{
+                'text': article.title,
+                'path': path('article_show', {id: article.id})
+            }]) %}
+        {% endfor %}
+        {% for specialPage in category.specialPages %}
+            {% set subMenu = subMenu|merge([{
+                'text': specialPage.title,
+                'path': path('special_page_show', {slug: specialPage.slug})
+            }]) %}
+        {% endfor %}
+        
+        {% set category_link = {
+            'text': category.name,
+            'path': path('category_show', {slug: category.slug})
+        } %}
+        
+        {% if subMenu|length > 0 %}
+            {% set category_link = category_link|merge({'subMenu': subMenu}) %}
+        {% endif %}
+
+        {% set links = links|merge([category_link]) %}
+    {% endif %}
+{% endfor %}
+
+{% if is_granted('ROLE_ADMIN') %}
+    {% set links = links|merge([{
+        'text' : 'Admin',
+        'path' : path('admin'),
+        'icon' : 'fa-cog'
+    }]) %}
+{% endif %}
+
+{% for link in links %}
+    {% set link_path = link.path is defined ? link.path : '' %}
+    {% set link_text = link.text is defined ? link.text : '' %}
+    {% set link_id = loop.index %}
+    {% if link.subMenu is defined %}
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="{{ link_path }}" role="button" data-bs-toggle="dropdown" aria-expanded="false" id="menu_{{ link_id }}">
+                {{ link_text }}
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="menu_{{ link_id }}">
+                {% for sublink in link.subMenu %}
+                    {% set sublink_path = sublink.path is defined ? sublink.path : '' %}
+                    {% set sublink_text = sublink.text is defined ? sublink.text : '' %}
+                    <li>
+                        <a class="dropdown-item" href="{{ sublink_path }}">
+                            {{ sublink_text }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ link_path }}" title="{{ link_text }}">
+                {% if link.icon is defined %}
+                    <i class="fa {{ link.icon }}"></i>
+                {% else %}
+                    {{ link_text }}
+                {% endif %}
+            </a>
+        </li>
+    {% endif %}
+{% endfor %}

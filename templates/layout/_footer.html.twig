@@ -1,0 +1,41 @@
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <h4 class="h5 text-uppercase fw-bold mb-3">ANDDE</h4>
+        <p>Association Nationale du Don D’Engendrement</p>
+        <p class="small text-muted">Association à but non lucratif de loi 1901</p>
+    </div>
+    <div class="col-md-4 mb-4 border-start-md border-dark ps-md-4">
+        <h4 class="h5 text-uppercase fw-bold mb-3">Siège Social</h4>
+        {% if association_settings %}
+            <p class="small">{{ association_settings.address|nl2br }}</p>
+            {% if association_settings.phoneNumber %}
+                <p class="small">Tél : {{ association_settings.phoneNumber }}</p>
+            {% endif %}
+            {% if association_settings.contactEmail %}
+                <p class="small">Email : <a href="mailto:{{ association_settings.contactEmail }}" class="text-dark">{{ association_settings.contactEmail }}</a></p>
+            {% endif %}
+        {% else %}
+            <p class="small">Association ANDDE<br>Maison des Associations<br>75000 PARIS</p>
+        {% endif %}
+    </div>
+    <div class="col-md-4 mb-4 border-start-md border-dark ps-md-4">
+        <h4 class="h5 text-uppercase fw-bold mb-3">Suivez-nous</h4>
+        <div class="d-flex gap-3 fs-4">
+            {% if association_settings and association_settings.linkedinLink %}
+                <a href="{{ association_settings.linkedinLink }}" target="_blank" class="text-dark"><i class="fa fa-linkedin"></i></a>
+            {% endif %}
+            {% if association_settings and association_settings.instagramLink %}
+                <a href="{{ association_settings.instagramLink }}" target="_blank" class="text-dark"><i class="fa fa-instagram"></i></a>
+            {% endif %}
+            {% if not association_settings or (not association_settings.linkedinLink and not association_settings.instagramLink) %}
+                <a href="#" class="text-dark"><i class="fa fa-twitter"></i></a>
+            {% endif %}
+        </div>
+        <p class="mt-3 small">
+            &copy; {{ "now"|date("Y") }} ANDDE. Tous droits réservés.
+            <a href="{{ is_granted('ROLE_USER') ? path('admin') : path('app_login') }}" class="text-decoration-none text-muted ms-2" title="Connexion">
+                <i class="fa fa-lock"></i>
+            </a>
+        </p>
+    </div>
+</div>

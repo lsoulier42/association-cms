@@ -1,0 +1,61 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Administration ANDDE{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-12 col-lg-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="card-title h5 mb-0">Configuration de l'Association</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small mb-4">Ces informations sont affichées dans le pied de page (footer) du site public.</p>
+                    
+                    {{ form_start(form) }}
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                {{ form_row(form.address) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.contactEmail) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.phoneNumber) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.linkedinLink) }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                {{ form_row(form.instagramLink) }}
+                            </div>
+                        </div>
+                        <div class="mt-4 border-top pt-3 text-end">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-save"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-12 col-lg-4">
+            <div class="card shadow-sm border-info h-100">
+                <div class="card-header bg-info text-white">
+                    <h3 class="card-title h5 mb-0">Aide</h3>
+                </div>
+                <div class="card-body">
+                    <h6>Gestion du contenu</h6>
+                    <p class="small">Utilisez le menu latéral pour gérer les <strong>Articles</strong>, les <strong>Catégories</strong> et les autres contenus du site.</p>
+                    
+                    <h6 class="mt-4">Accès rapide</h6>
+                    <ul class="list-unstyled small">
+                        <li class="mb-2"><a href="{{ path('homepage') }}" target="_blank"><i class="fa fa-external-link"></i> Voir le site public</a></li>
+                        <li><a href="{{ path('app_logout') }}"><i class="fa fa-sign-out"></i> Se déconnecter</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

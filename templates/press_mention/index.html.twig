@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions presse{% endblock %}
+
+{% block main_content %}
+    <h1>Mentions presse</h1>
+
+    {% if mentions is empty %}
+        <p>Aucune mention presse.</p>
+    {% else %}
+        <ul class="list-unstyled">
+            {% for mention in mentions %}
+                <li class="mb-3">
+                    <strong>{{ mention.title }}</strong>
+                    <div class="text-muted">{{ mention.mediaName }}</div>
+                    <a href="{{ mention.externalLink }}" target="_blank" rel="noopener">Lire l’article</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

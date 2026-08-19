@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ANDDE - Association Nationale du Don D'Engendrement{% endblock %}
+
+{% block main_content %}
+    <section class="logo-section mb-5">
+        <div class="logo-container">
+            <div class="acronym">
+                <span>A</span><span>N</span><span>D</span><span>D</span><span>E</span>
+            </div>
+            <p class="lead text-uppercase fw-bold" style="letter-spacing: 1px;">
+                Association Nationale du Don D'Engendrement
+            </p>
+        </div>
+    </section>
+
+    <div class="row">
+        <div class="col-md-8">
+            <h2 class="mb-4">Dernières Actualités</h2>
+            <div class="row">
+                {% for article in last_articles %}
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body">
+                                <h3 class="card-title h4">{{ article.title }}</h3>
+                                <p class="text-muted small">{{ article.publishedAt|date('d/m/Y') }}</p>
+                                <p class="card-text">{{ article.content|striptags|u.truncate(150, '...') }}</p>
+                                <a href="{{ path('article_show', {id: article.id}) }}" class="btn btn-outline-dark btn-sm text-uppercase">Lire la suite</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="p-4 bg-light border-start border-dark border-4">
+                <h2 class="h3 mb-3">L'Association</h2>
+                <p>L’ANDDE a pour but de fédérer les personnes issues de dons (gamètes ou embryons), les parents par don, les donneurs, ainsi que les professionnels de santé et les chercheurs.</p>
+                <a href="#" class="btn btn-dark w-100 text-uppercase">Adhérer à l'ANDDE</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

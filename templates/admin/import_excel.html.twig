@@ -1,0 +1,30 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text text-muted mb-4">
+                        Sélectionnez un fichier Excel (.xlsx) contenant les mentions presse.<br>
+                        Les colonnes attendues sont : <strong>DATE | JOURNAL | TYPE | TITRE | LIEN</strong>.
+                    </p>
+                    
+                    {{ form_start(form) }}
+                        {{ form_widget(form) }}
+                        <div class="mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-upload me-1"></i> Importer
+                            </button>
+                            <a href="{{ ea_url().setAction('index') }}" class="btn btn-secondary ms-2">
+                                Retour
+                            </a>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

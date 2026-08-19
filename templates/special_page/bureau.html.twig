@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ specialPage.title }}{% endblock %}
+
+{% block main_content %}
+    <article class="special-page">
+        <h1>{{ specialPage.title }}</h1>
+
+        {% if specialPage.content %}
+            <div class="special-page-content mb-5">
+                {{ specialPage.content|raw }}
+            </div>
+        {% endif %}
+
+        {% if boardMembers is defined and boardMembers is not empty %}
+            {% set members_by_category = {} %}
+            {% for member in boardMembers %}
+                {% set cat_val = member.category.value %}
+                {% if members_by_category[cat_val] is not defined %}
+                    {% set members_by_category = members_by_category|merge({(cat_val): []}) %}
+                {% endif %}
+                {% set members_by_category = members_by_category|merge({(cat_val): members_by_category[cat_val]|merge([member])}) %}
+            {% endfor %}
+
+            {% set categories = [
+                'BUREAU_RESTREINT',
+                'VICE_PRESIDENTS'
+            ] %}
+
+            <div class="bureau-list mt-4">
+                {% for cat_val in categories %}
+                    {% if members_by_category[cat_val] is defined and members_by_category[cat_val] is not empty %}
+                        <h3 class="mt-5 mb-4 text-primary border-bottom pb-2">{{ members_by_category[cat_val][0].category.label }}</h3>
+                        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                            {% for member in members_by_category[cat_val] %}
+                                {{ include('special_page/_board_member_card.html.twig') }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-muted py-5 text-center">
+                <i class="fas fa-users-slash fa-3x mb-3 d-block opacity-25"></i>
+                Aucun membre n'est actuellement renseigné.
+            </p>
+        {% endif %}
+    </article>
+{% endblock %}
