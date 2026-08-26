@@ -5,8 +5,8 @@ namespace App\Command;
 use App\Entity\Article;
 use App\Entity\Category;
 use App\Entity\LinkedInPost;
+use App\Entity\Media;
 use App\Entity\PressMention;
-use App\Entity\Resource;
 use App\Entity\User;
 use DateTimeImmutable;
 use Exception;
@@ -38,7 +38,11 @@ class ImportContentCommand extends Command
     protected function configure(): void
     {
         $this
-            ->addArgument('type', InputArgument::REQUIRED, 'Type: articles|categories|resources|press_mentions|linkedin_posts|users')
+            ->addArgument(
+                'type',
+                InputArgument::REQUIRED,
+                'Type: articles|categories|press_mentions|linkedin_posts|users'
+            )
             ->addArgument('file', InputArgument::REQUIRED, 'Chemin vers un fichier CSV/JSON')
             ->addOption('dry-run', null, InputOption::VALUE_NONE, 'Analyse sans écrire en base');
     }
@@ -66,7 +70,6 @@ class ImportContentCommand extends Command
             $handled = match ($type) {
                 'articles' => $this->importArticle($normalized, $io),
                 'categories' => $this->importCategory($normalized, $io),
-                'resources' => $this->importResource($normalized, $io),
                 'press_mentions' => $this->importPressMention($normalized, $io),
                 'linkedin_posts' => $this->importLinkedInPost($normalized, $io),
                 'users' => $this->importUser($normalized, $io),
@@ -254,27 +257,6 @@ class ImportContentCommand extends Command
     /**
      * @param array<string, mixed> $record
      */
-    private function importResource(array $record, SymfonyStyle $io): bool
-    {
-        $title = $this->getValue($record, ['title', 'titre']);
-        $description = $this->getValue($record, ['description']);
-        if ($title === null || $description === null) {
-            $io->warning('Ressource ignorée (titre ou description manquant).');
-            return false;
-        }
-
-        $resource = new Resource();
-        $resource->setTitle($title)
-            ->setDescription($description)
-            ->setLink($this->getValue($record, ['link', 'lien']))
-            ->setAttachmentPath($this->getValue($record, ['attachment_path', 'fichier', 'piece_jointe']));
-        $this->entityManager->persist($resource);
-        return true;
-    }
-
-    /**
-     * @param array<string, mixed> $record
-     */
     private function importPressMention(array $record, SymfonyStyle $io): bool
     {
         $title = $this->getValue($record, ['title', 'titre']);
@@ -286,10 +268,17 @@ class ImportContentCommand extends Command
             return false;
         }
 
+        $media = $this->entityManager->getRepository(Media::class)->findOneBy(['name' => $mediaName]);
+        if (!$media) {
+            $media = new Media();
+            $media->setName($mediaName);
+            $this->entityManager->persist($media);
+        }
+
         $pressMention = new PressMention();
         $pressMention->setTitle($title)
             ->setExternalLink($externalLink)
-            ->setMediaName($mediaName);
+            ->setMedia($media);
         $this->entityManager->persist($pressMention);
         return true;
     }

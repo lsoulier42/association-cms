@@ -84,7 +84,7 @@ class MediaMetadataScraper
 
         $parsedUrl = parse_url($url);
         $domain = $parsedUrl['host'] ?? '';
-        
+
         if (!$mediaName && $domain) {
             $mediaName = str_replace('www.', '', $domain);
         }
@@ -150,10 +150,14 @@ class MediaMetadataScraper
         $nodes = $xpath->query('//script[@type="application/ld+json"]');
         foreach ($nodes as $node) {
             $content = trim($node->nodeValue ?: $node->textContent);
-            if (!$content) continue;
-            
+            if (!$content) {
+                continue;
+            }
+
             $data = json_decode($content, true);
-            if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) continue;
+            if (json_last_error() !== JSON_ERROR_NONE || !is_array($data)) {
+                continue;
+            }
 
             // Handle both single objects and arrays of objects (like Yoast SEO graphs)
             $objects = isset($data['@graph']) ? $data['@graph'] : (isset($data[0]) ? $data : [$data]);
@@ -168,7 +172,7 @@ class MediaMetadataScraper
                 }
             }
         }
-        
+
         return null;
     }
 }

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: PartnerRepository::class)]
 class Partner extends AbstractEntity
 {
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
     #[ORM\Column(length: 255, nullable: true)]

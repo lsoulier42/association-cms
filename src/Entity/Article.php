@@ -32,7 +32,7 @@ class Article extends AbstractEntity
      * @var Category|null $category
      */
     #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
     /**

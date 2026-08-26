@@ -46,9 +46,12 @@ class LinkedInPostCrudController extends AbstractCrudController
         ];
     }
 
+    /**
+     * @param AdminContext<LinkedInPost> $context
+     */
     #[AdminRoute(path: '/import-linkedin', name: 'import_linkedin_action')]
     public function importLinkedInAction(
-        AdminContext $context, 
+        AdminContext $context,
         LinkedInApiService $linkedInApiService,
         AdminUrlGenerator $adminUrlGenerator
     ): Response {

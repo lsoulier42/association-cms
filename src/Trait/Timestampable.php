@@ -12,13 +12,13 @@ trait Timestampable
     /**
      * @var DateTimeImmutable|null $createdAt
      */
-    #[Column(options: ["default" => 'CURRENT_TIMESTAMP'])]
+    #[Column(options: ["default" => 'CURRENT_TIMESTAMP'], nullable: true)]
     protected ?DateTimeImmutable $createdAt = null;
 
     /**
      * @var DateTimeImmutable|null $updatedAt
      */
-    #[Column(options: ["default" => 'CURRENT_TIMESTAMP'])]
+    #[Column(options: ["default" => 'CURRENT_TIMESTAMP'], nullable: true)]
     protected ?DateTimeImmutable $updatedAt = null;
 
     /**

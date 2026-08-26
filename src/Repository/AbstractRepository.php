@@ -13,11 +13,14 @@ use Doctrine\Persistence\ManagerRegistry;
 use Pagerfanta\Doctrine\ORM\QueryAdapter;
 use Pagerfanta\Pagerfanta;
 
+/**
+ * @template T of object
+ * @extends ServiceEntityRepository<T>
+ */
 abstract class AbstractRepository extends ServiceEntityRepository
 {
     /**
-     * @param ManagerRegistry $registry
-     * @param class-string $className
+     * @param class-string<T> $className
      */
     public function __construct(ManagerRegistry $registry, string $className)
     {
@@ -25,9 +28,8 @@ abstract class AbstractRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed $entity
+     * @param T $entity
      * @param bool $flush
-     * @return void
      */
     public function createOrUpdate(mixed $entity, bool $flush = true): void
     {
@@ -41,9 +43,8 @@ abstract class AbstractRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed $entity
+     * @param T $entity
      * @param bool $flush
-     * @return void
      */
     public function remove(mixed $entity, bool $flush = true): void
     {
@@ -55,103 +56,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $alias
-     * @param string $fieldName
-     * @param mixed $fieldValue
-     * @return QueryBuilder
-     */
-    public static function addFieldLike(
-        QueryBuilder $queryBuilder,
-        string $alias,
-        string $fieldName,
-        mixed $fieldValue,
-    ): QueryBuilder {
-        $orx = new Orx();
-        self::formatOrxLike($queryBuilder, $orx, $alias, $fieldName, $fieldValue);
-        return $queryBuilder->andWhere($queryBuilder->expr()->orX($orx));
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param Orx $orx
-     * @param string $alias
-     * @param string $fieldName
-     * @param mixed $fieldValue
-     * @return void
-     */
-    private static function formatOrxLike(
-        QueryBuilder $queryBuilder,
-        Orx $orx,
-        string $alias,
-        string $fieldName,
-        mixed $fieldValue
-    ): void {
-        $fieldWithAlias = "$alias.$fieldName";
-        $likeVersions = ["%$fieldValue%", "$fieldValue%", "%$fieldValue"];
-        foreach ($likeVersions as $version) {
-            $orx->add($queryBuilder->expr()->like($fieldWithAlias, $queryBuilder->expr()->literal($version)));
-        }
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $alias
-     * @param string $fieldName
-     * @param mixed $fieldValue
-     * @return QueryBuilder
-     */
-    public static function addFieldAndWhere(
-        QueryBuilder $queryBuilder,
-        string $alias,
-        string $fieldName,
-        mixed $fieldValue,
-    ): QueryBuilder {
-        $parameterName = $fieldName;
-        return $queryBuilder->andWhere("$alias.$fieldName = :$parameterName")
-            ->setParameter($parameterName, $fieldValue);
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $parentAlias
-     * @param string $relationField
-     * @param string $childAlias
-     * @param string $joinType
-     * @return QueryBuilder
-     */
-    public static function addTableJoin(
-        QueryBuilder $queryBuilder,
-        string $parentAlias,
-        string $relationField,
-        string $childAlias,
-        string $joinType = Join::LEFT_JOIN
-    ): QueryBuilder {
-        if (self::hasAlias($queryBuilder, $childAlias)) {
-            return $queryBuilder;
-        }
-        $relation = "$parentAlias.$relationField";
-        if ($joinType === Join::INNER_JOIN) {
-            return $queryBuilder->innerJoin($relation, $childAlias);
-        }
-        return $queryBuilder->leftJoin($relation, $childAlias);
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $alias
-     * @return bool
-     */
-    private static function hasAlias(
-        QueryBuilder $queryBuilder,
-        string $alias
-    ): bool {
-        return in_array($alias, $queryBuilder->getAllAliases(), true);
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @return Collection
+     * @return Collection<int, T>
      */
     public static function getCollectionFromQueryBuilder(QueryBuilder $queryBuilder): Collection
     {
@@ -159,50 +64,7 @@ abstract class AbstractRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $startDate
-     * @param string $endDate
-     * @param string $alias
-     * @param string $fieldName
-     * @return QueryBuilder
-     */
-    public static function addPeriodWhere(
-        QueryBuilder $queryBuilder,
-        string $startDate,
-        string $endDate,
-        string $alias,
-        string $fieldName
-    ): QueryBuilder {
-        $startDateParameter = "startDate";
-        $endDateParameter = "endDate";
-        return $queryBuilder
-            ->andWhere("$alias.$fieldName BETWEEN :$startDateParameter AND :$endDateParameter")
-            ->setParameter($startDateParameter, $startDate)
-            ->setParameter($endDateParameter, $endDate);
-    }
-
-    /**
-     * @param QueryBuilder $queryBuilder
-     * @param string $alias
-     * @param int $numberElements
-     * @return QueryBuilder
-     */
-    public static function addRandomElements(
-        QueryBuilder $queryBuilder,
-        string $alias,
-        int $numberElements
-    ): QueryBuilder {
-        $numberElements = $numberElements > 0 ? $numberElements : null;
-        $queryBuilder->addSelect('RANDOM() as HIDDEN rand');
-        return $queryBuilder
-            ->setMaxResults($numberElements)
-            ->orderBy('rand');
-    }
-
-    /**
-     * @param PaginationDto $dto
-     * @param QueryBuilder $queryBuilder
-     * @return Pagerfanta
+     * @return Pagerfanta<T>
      */
     public static function findAllPaginated(PaginationDto $dto, QueryBuilder $queryBuilder): Pagerfanta
     {

@@ -59,6 +59,9 @@ class AppointmentCrudController extends AbstractCrudController
         ];
     }
 
+    /**
+     * @param AdminContext<Appointment> $context
+     */
     #[AdminRoute(path: '/import-excel', name: 'import_appointment_excel')]
     public function importExcel(AdminContext $context, Request $request, EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator): Response
     {
@@ -73,7 +76,7 @@ class AppointmentCrudController extends AbstractCrudController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('file')->getData();
-            
+
             if ($xlsx = SimpleXLSX::parse($file->getPathname())) {
                 // Find "RDV" sheet index
                 $sheetIndex = -1;
@@ -98,15 +101,23 @@ class AppointmentCrudController extends AbstractCrudController
                 }
 
                 foreach ($rows as $index => $row) {
-                    if ($index === 0) continue; // Ignore l'en-tête
-                    
-                    if (count($row) < 3) continue;
-                    
+                    if ($index === 0) {
+                        continue; // Ignore l'en-tête
+                    }
+
+                    if (count($row) < 3) {
+                        continue;
+                    }
+
                     [$dateStr, $location, $subject] = $row;
-                    
-                    if (empty($dateStr) && empty($location) && empty($subject)) continue;
-                    if ($dateStr === 'DATE' && $location === 'RDV') continue; // Si en-tête mal ignoré
-                    
+
+                    if (empty($dateStr) && empty($location) && empty($subject)) {
+                        continue;
+                    }
+                    if ($dateStr === 'DATE' && $location === 'RDV') {
+                        continue; // Si en-tête mal ignoré
+                    }
+
                     $date = null;
                     if ($dateStr) {
                         // Excel dates might be parsed as strings like '18.06.2025' or '18/06/2025' or standard Excel float values
@@ -117,25 +128,33 @@ class AppointmentCrudController extends AbstractCrudController
                         } else {
                             // Try multiple formats
                             $date = \DateTimeImmutable::createFromFormat('Y.m.d', $dateStr);
-                            if (!$date) $date = \DateTimeImmutable::createFromFormat('Y-m-d', $dateStr);
-                            if (!$date) $date = \DateTimeImmutable::createFromFormat('d.m.Y', $dateStr);
-                            if (!$date) $date = \DateTimeImmutable::createFromFormat('d/m/Y', $dateStr);
+                            if (!$date) {
+                                $date = \DateTimeImmutable::createFromFormat('Y-m-d', $dateStr);
+                            }
+                            if (!$date) {
+                                $date = \DateTimeImmutable::createFromFormat('d.m.Y', $dateStr);
+                            }
+                            if (!$date) {
+                                $date = \DateTimeImmutable::createFromFormat('d/m/Y', $dateStr);
+                            }
                         }
                     }
 
                     if (!$date) {
                          // Default to current date if missing or unparseable, or skip?
                          // It's better to skip if date is completely unparseable for a rendezvous
-                         if (!empty($dateStr)) {
-                             // Try natural parsing
-                             try {
-                                 $parsed = new \DateTimeImmutable($dateStr);
-                                 $date = $parsed;
-                             } catch (\Exception $e) {
-                                 // Ignore
-                             }
-                         }
-                         if (!$date) continue;
+                        if (!empty($dateStr)) {
+                            // Try natural parsing
+                            try {
+                                $parsed = new \DateTimeImmutable($dateStr);
+                                $date = $parsed;
+                            } catch (\Exception $e) {
+                                // Ignore
+                            }
+                        }
+                        if (!$date) {
+                            continue;
+                        }
                     }
 
                     // Vérifier si le RDV existe déjà pour éviter les doublons (Même date, lieu, sujet)
@@ -144,21 +163,23 @@ class AppointmentCrudController extends AbstractCrudController
                         'location' => $location,
                         'subject' => $subject
                     ]);
-                    
-                    if ($existing) continue;
+
+                    if ($existing) {
+                        continue;
+                    }
 
                     $appointment = new Appointment();
                     $appointment->setDate($date);
                     $appointment->setLocation($location);
                     $appointment->setSubject($subject);
-                    
+
                     if ($specialPage) {
                         $appointment->setSpecialPage($specialPage);
                     }
-                    
+
                     $em->persist($appointment);
                 }
-                
+
                 $em->flush();
                 $this->addFlash('success', 'Importation Excel réussie.');
             } else {
@@ -176,10 +197,6 @@ class AppointmentCrudController extends AbstractCrudController
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if (!$entityInstance instanceof Appointment) {
-            return;
-        }
-
         if (!$entityInstance->getSpecialPage()) {
             $specialPage = $entityManager->getRepository(SpecialPage::class)->findOneBy(['identifier' => 'appointments']);
             if (!$specialPage) {
@@ -189,7 +206,7 @@ class AppointmentCrudController extends AbstractCrudController
                 $entityInstance->setSpecialPage($specialPage);
             }
         }
-        
+
         parent::persistEntity($entityManager, $entityInstance);
     }
 }

@@ -75,6 +75,9 @@ class PressMentionCrudController extends AbstractCrudController
         ];
     }
 
+    /**
+     * @param AdminContext<PressMention> $context
+     */
     #[AdminRoute(path: '/import-excel', name: 'import_excel')]
     public function importExcel(AdminContext $context, Request $request, EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator): Response
     {
@@ -89,30 +92,40 @@ class PressMentionCrudController extends AbstractCrudController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $file = $form->get('file')->getData();
-            
+
             if ($xlsx = SimpleXLSX::parse($file->getPathname())) {
                 $rows = $xlsx->rows();
                 $specialPage = $em->getRepository(SpecialPage::class)->findOneBy(['identifier' => 'press']);
                 $mediaRepo = $em->getRepository(Media::class);
 
                 foreach ($rows as $index => $row) {
-                    if ($index === 0) continue; // Ignore l'en-tête
-                    
-                    if (count($row) < 5) continue;
-                    
+                    if ($index === 0) {
+                        continue; // Ignore l'en-tête
+                    }
+
+                    if (count($row) < 5) {
+                        continue;
+                    }
+
                     [$dateStr, $journalName, $typeStr, $title, $link] = $row;
-                    
-                    if (empty($link) || empty($title)) continue;
-                    if ($link === 'LIEN') continue; // Si en-tête mal ignoré
-                    
+
+                    if (empty($link) || empty($title)) {
+                        continue;
+                    }
+                    if ($link === 'LIEN') {
+                        continue; // Si en-tête mal ignoré
+                    }
+
                     // Vérifier si le lien existe déjà pour éviter les doublons
                     $existing = $em->getRepository(PressMention::class)->findOneBy(['externalLink' => $link]);
-                    if ($existing) continue;
+                    if ($existing) {
+                        continue;
+                    }
 
                     $mention = new PressMention();
                     $mention->setExternalLink($link);
                     $mention->setTitle($title);
-                    
+
                     $matchedType = PressMention::TYPE_ARTICLE;
                     foreach (PressMention::TYPES as $validType) {
                         if (strcasecmp($validType, $typeStr) === 0) {
@@ -121,7 +134,7 @@ class PressMentionCrudController extends AbstractCrudController
                         }
                     }
                     $mention->setType($matchedType);
-                    
+
                     $scrapedData = $this->scraper->scrape($link);
 
                     if ($dateStr) {
@@ -131,15 +144,17 @@ class PressMentionCrudController extends AbstractCrudController
                         } else {
                             // Essayer d'autres formats si besoin, par exemple Y-m-d
                             $dateAlternative = \DateTimeImmutable::createFromFormat('Y-m-d', $dateStr);
-                            if ($dateAlternative) $mention->setPublishedAt($dateAlternative);
+                            if ($dateAlternative) {
+                                $mention->setPublishedAt($dateAlternative);
+                            }
                         }
                     } elseif ($scrapedData['publishedAt']) {
                         $mention->setPublishedAt($scrapedData['publishedAt']);
                     }
-                    
+
                     if ($journalName) {
                         $media = $mediaRepo->findOneBy(['name' => $journalName]);
-                        
+
                         if (!$media && $scrapedData['media']) {
                             $media = $scrapedData['media'];
                             $media->setName($journalName); // Force le nom Excel
@@ -167,14 +182,14 @@ class PressMentionCrudController extends AbstractCrudController
                         $em->flush();
                         $mention->setMedia($media);
                     }
-                    
+
                     if ($specialPage) {
                         $mention->setSpecialPage($specialPage);
                     }
-                    
+
                     $em->persist($mention);
                 }
-                
+
                 $em->flush();
                 $this->addFlash('success', 'Importation Excel réussie.');
             } else {
@@ -192,20 +207,12 @@ class PressMentionCrudController extends AbstractCrudController
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if (!$entityInstance instanceof PressMention) {
-            return;
-        }
-
         $this->autoFill($entityInstance, $entityManager);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
     public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if (!$entityInstance instanceof PressMention) {
-            return;
-        }
-
         $this->autoFill($entityInstance, $entityManager);
         parent::updateEntity($entityManager, $entityInstance);
     }

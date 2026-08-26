@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: AssociationRepository::class)]
 class Association extends AbstractEntity
 {
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $address = null;
 
     #[ORM\Column(length: 20, nullable: true)]
@@ -20,7 +20,7 @@ class Association extends AbstractEntity
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $instagramLink = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $contactEmail = null;
 
     public function getAddress(): ?string

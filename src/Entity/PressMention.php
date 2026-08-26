@@ -24,13 +24,13 @@ class PressMention extends AbstractEntity
         self::TYPE_ANNONCE => self::TYPE_ANNONCE,
     ];
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $title = null;
 
     #[ORM\Column(length: 50, options: ['default' => self::TYPE_ARTICLE])]
     private string $type = self::TYPE_ARTICLE;
 
-    #[ORM\Column(length: 500)]
+    #[ORM\Column(length: 500, nullable: true)]
     private ?string $externalLink = null;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]

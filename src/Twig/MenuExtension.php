@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Repository\AssociationRepository;
 use App\Service\MenuProvider;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\GlobalsInterface;
@@ -10,7 +11,7 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
 {
     public function __construct(
         private readonly MenuProvider $menuProvider,
-        private readonly \Doctrine\ORM\EntityManagerInterface $entityManager
+        private readonly AssociationRepository $associationRepository,
     ) {
     }
 
@@ -18,7 +19,7 @@ class MenuExtension extends AbstractExtension implements GlobalsInterface
     {
         return [
             'menu_categories' => $this->menuProvider->getMenuCategories(),
-            'association_settings' => $this->entityManager->getRepository(\App\Entity\Association::class)->getSettings(),
+            'association_settings' => $this->associationRepository->getSettings(),
         ];
     }
 }
