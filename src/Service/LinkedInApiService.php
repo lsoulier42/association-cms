@@ -14,10 +14,10 @@ class LinkedInApiService
         private readonly HttpClientInterface $httpClient,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
-        #[Autowire(env: 'LINKEDIN_ACCESS_TOKEN')]
-        private readonly string $accessToken = '',
-        #[Autowire(env: 'LINKEDIN_ORGANIZATION_ID')]
-        private readonly string $organizationId = ''
+        #[Autowire(env: 'default::LINKEDIN_ACCESS_TOKEN')]
+        private readonly ?string $accessToken = null,
+        #[Autowire(env: 'default::LINKEDIN_ORGANIZATION_ID')]
+        private readonly ?string $organizationId = null
     ) {
     }
 
@@ -29,7 +29,8 @@ class LinkedInApiService
         if (empty($this->accessToken) || empty($this->organizationId)) {
             return [
                 'success' => false,
-                'message' => 'Les identifiants API LinkedIn (Token ou ID Organisation) ne sont pas configurés dans les variables d\'environnement.',
+                'message' => 'Les identifiants API LinkedIn (Token ou ID Organisation) '
+                    . 'ne sont pas configurés dans les variables d\'environnement.',
                 'count' => 0
             ];
         }
@@ -51,7 +52,7 @@ class LinkedInApiService
             ]);
 
             $data = $response->toArray();
-            
+
             if (!isset($data['elements'])) {
                 return [
                     'success' => false,
@@ -67,7 +68,7 @@ class LinkedInApiService
                 // In a real scenario, we extract the URN to construct the embed link
                 $urn = $element['id'] ?? null;
                 $text = $element['text']['text'] ?? 'Post LinkedIn';
-                
+
                 if (!$urn) {
                     continue;
                 }
@@ -80,7 +81,7 @@ class LinkedInApiService
                     $post = new LinkedInPost();
                     $post->setTitle(mb_substr($text, 0, 250)); // Truncate title
                     $post->setEmbedLink($embedLink);
-                    
+
                     $this->entityManager->persist($post);
                     $importedCount++;
                 }
@@ -93,13 +94,13 @@ class LinkedInApiService
                 'message' => 'Importation réussie.',
                 'count' => $importedCount
             ];
-
         } catch (\Exception $e) {
             $this->logger->error('Erreur lors de l\'import LinkedIn : ' . $e->getMessage());
-            
+
             return [
                 'success' => false,
-                'message' => 'Une erreur est survenue lors de la communication avec l\'API LinkedIn : ' . $e->getMessage(),
+                'message' => 'Une erreur est survenue lors de la communication avec l\'API LinkedIn : '
+                    . $e->getMessage(),
                 'count' => 0
             ];
         }
