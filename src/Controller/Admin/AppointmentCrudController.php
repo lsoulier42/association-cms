@@ -63,8 +63,12 @@ class AppointmentCrudController extends AbstractCrudController
      * @param AdminContext<Appointment> $context
      */
     #[AdminRoute(path: '/import-excel', name: 'import_appointment_excel')]
-    public function importExcel(AdminContext $context, Request $request, EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator): Response
-    {
+    public function importExcel(
+        AdminContext $context,
+        Request $request,
+        EntityManagerInterface $em,
+        AdminUrlGenerator $adminUrlGenerator
+    ): Response {
         $form = $this->createFormBuilder()
             ->add('file', FileType::class, [
                 'label' => 'Fichier Excel (.xlsx)',
@@ -120,7 +124,8 @@ class AppointmentCrudController extends AbstractCrudController
 
                     $date = null;
                     if ($dateStr) {
-                        // Excel dates might be parsed as strings like '18.06.2025' or '18/06/2025' or standard Excel float values
+                        // Excel dates might be parsed as strings like '18.06.2025',
+                        // '18/06/2025' or standard Excel float values
                         if (is_numeric($dateStr)) {
                             // Convert Excel date to PHP DateTime
                             $unixDate = ($dateStr - 25569) * 86400;
@@ -198,7 +203,8 @@ class AppointmentCrudController extends AbstractCrudController
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
         if (!$entityInstance->getSpecialPage()) {
-            $specialPage = $entityManager->getRepository(SpecialPage::class)->findOneBy(['identifier' => 'appointments']);
+            $specialPage = $entityManager->getRepository(SpecialPage::class)
+                ->findOneBy(['identifier' => 'appointments']);
             if (!$specialPage) {
                 $specialPage = $entityManager->getRepository(SpecialPage::class)->findOneBy(['identifier' => 'rdv']);
             }

@@ -56,7 +56,10 @@ jobs:
           --health-timeout 3s
           --health-retries 30
     env:
-      DATABASE_URL: postgresql://association:association@127.0.0.1:5432/association_test?serverVersion=18&charset=utf8
+      # Le suffixe "_test" est ajouté par doctrine.yaml (dbname_suffix)
+      # en environnement test : la base cible est "association_test".
+      APP_ENV: test
+      DATABASE_URL: postgresql://association:association@127.0.0.1:5432/association?serverVersion=18&charset=utf8
     steps:
       - uses: actions/checkout@v4
 
@@ -70,13 +73,13 @@ jobs:
         uses: ramsey/composer-install@v3
 
       - name: Create test database
-        run: php bin/console doctrine:database:create --if-not-exists
+        run: php bin/console doctrine:database:create --if-not-exists --env=test
 
       - name: Run migrations
-        run: php bin/console doctrine:migrations:migrate --no-interaction
+        run: php bin/console doctrine:migrations:migrate --no-interaction --env=test
 
       - name: Load fixtures
-        run: php bin/console doctrine:fixtures:load --no-interaction
+        run: php bin/console doctrine:fixtures:load --no-interaction --env=test
 
       - name: PHPUnit
         run: vendor/bin/phpunit

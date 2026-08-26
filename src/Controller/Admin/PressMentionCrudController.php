@@ -79,8 +79,12 @@ class PressMentionCrudController extends AbstractCrudController
      * @param AdminContext<PressMention> $context
      */
     #[AdminRoute(path: '/import-excel', name: 'import_excel')]
-    public function importExcel(AdminContext $context, Request $request, EntityManagerInterface $em, AdminUrlGenerator $adminUrlGenerator): Response
-    {
+    public function importExcel(
+        AdminContext $context,
+        Request $request,
+        EntityManagerInterface $em,
+        AdminUrlGenerator $adminUrlGenerator
+    ): Response {
         $form = $this->createFormBuilder()
             ->add('file', FileType::class, [
                 'label' => 'Fichier Excel (.xlsx)',
@@ -175,7 +179,9 @@ class PressMentionCrudController extends AbstractCrudController
                             if (!$media->getWebsiteUrl()) {
                                 $parsedUrl = parse_url($link);
                                 if (isset($parsedUrl['host'])) {
-                                    $media->setWebsiteUrl(($parsedUrl['scheme'] ?? 'https') . '://' . $parsedUrl['host']);
+                                    $media->setWebsiteUrl(
+                                        ($parsedUrl['scheme'] ?? 'https') . '://' . $parsedUrl['host']
+                                    );
                                 }
                             }
                         }

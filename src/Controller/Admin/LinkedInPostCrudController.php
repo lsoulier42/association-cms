@@ -58,7 +58,10 @@ class LinkedInPostCrudController extends AbstractCrudController
         $result = $linkedInApiService->importPosts();
 
         if ($result['success']) {
-            $this->addFlash('success', sprintf('Importation terminée : %d nouveaux posts récupérés.', $result['count']));
+            $this->addFlash(
+                'success',
+                sprintf('Importation terminée : %d nouveaux posts récupérés.', $result['count'])
+            );
         } else {
             $this->addFlash('danger', $result['message']);
         }
