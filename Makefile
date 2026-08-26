@@ -38,6 +38,12 @@ clear:
 migrations:
 	$(DOCKER_COMPOSE_DEV) run --rm php bash -ci 'php -d memory_limit=4G ./bin/console doctrine:migrations:migrate --no-interaction'
 
+tests:
+	$(DOCKER_COMPOSE_DEV) run --rm php bash -ci 'php -d memory_limit=4G ./bin/console doctrine:database:create --if-not-exists --env=test && php -d memory_limit=4G ./bin/console doctrine:migrations:migrate --no-interaction --env=test && vendor/bin/phpunit'
+
+quality:
+	$(DOCKER_COMPOSE_DEV) run --rm php bash -ci 'vendor/bin/phpstan analyse --no-progress && vendor/bin/phpcs'
+
 FILE ?= dump.sql
 
 db-dump:

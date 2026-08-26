@@ -9,7 +9,7 @@ services:
     volumes:
       - "./docker/db/postgresql:/var/lib/postgresql/data"
     ports:
-      - "5532:${DATABASE_PORT}"
+      - "${DATABASE_HOST_PORT:-5532}:${DATABASE_PORT}"
     environment:
       POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
       POSTGRES_USER: "${DATABASE_USER}"
@@ -45,5 +45,5 @@ services:
   mailer:
     image: axllent/mailpit
     ports:
-      - "1125:1025"
-      - "1180:8025"
+      - "${MAILER_SMTP_PORT:-1125}:1025"
+      - "${MAILER_WEB_PORT:-1180}:8025"
