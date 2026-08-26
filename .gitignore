@@ -31,6 +31,10 @@ phpstan.neon
 /assets/vendor/
 ###< symfony/asset-mapper ###
 
+###> symfony/config ###
+/config/reference.php
+###< symfony/config ###
+
 ###> docker ###
 /docker/db/postgresql/
 ###< docker ###
