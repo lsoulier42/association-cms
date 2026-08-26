@@ -41,9 +41,9 @@ below with a realistic placeholder site.
 | --- | --- |
 | <img src="docs/screenshots/homepage.png" alt="Homepage" width="720"> | <img src="docs/screenshots/team-page.png" alt="Team page" width="720"> |
 
-| Contact page | Login page |
+| Contact page | Admin panel |
 | --- | --- |
-| <img src="docs/screenshots/contact-page.png" alt="Contact page" width="720"> | <img src="docs/screenshots/login-page.png" alt="Login page" width="720"> |
+| <img src="docs/screenshots/contact-page.png" alt="Contact page" width="720"> | <img src="docs/screenshots/admin-panel.png" alt="Admin panel" width="720"> |
 
 ## Design
 
