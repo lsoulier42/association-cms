@@ -2,7 +2,7 @@
 
 namespace App\Page;
 
-use Symfony\Component\DependencyInjection\Attribute\TaggedIterator;
+use Symfony\Component\DependencyInjection\Attribute\AutowireIterator;
 
 /**
  * Holds every service tagged with `app.page_type`, indexed by identifier.
@@ -18,7 +18,7 @@ class PageTypeRegistry
      * @param iterable<PageTypeInterface> $pageTypes
      */
     public function __construct(
-        #[TaggedIterator(tag: 'app.page_type')]
+        #[AutowireIterator(tag: 'app.page_type')]
         iterable $pageTypes,
     ) {
         foreach ($pageTypes as $pageType) {

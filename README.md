@@ -31,8 +31,8 @@ d'administration complet.
 
 | Composant | Version |
 | --- | --- |
-| PHP | 8.4 |
-| Symfony | 7.4 |
+| PHP | 8.5 |
+| Symfony | 8.1 |
 | PostgreSQL | 18 |
 | EasyAdmin | 5 |
 | Twig + Bootstrap 5 + Asset Mapper (importmap) | — |
