@@ -1,16 +1,16 @@
 <nav class="navbar navbar-expand-lg navbar-dark p-3">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center" href="{{ path('homepage') }}">
-            <img src="{{ asset('wp-content/uploads/2025/07/Sans-titre-282-x-282-px.png') }}" 
-                 width="60" height="60" class="d-inline-block align-top me-2" alt="ANDDE Logo">
+            <img src="{{ asset('images/logo.svg') }}"
+                 width="60" height="60" class="d-inline-block align-top me-2" alt="{{ site_name }}">
         </a>
-        
+
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                 {% include 'layout/_menu--header.html.twig' %}

@@ -1,39 +1,30 @@
-{% set current_url = app.request.requestUri %}
 {% set links = [] %}
 
 {% for category in menu_categories %}
-    {% if category.name == 'Actualités' %}
-        {% set category_link = {
-            'text': category.name,
-            'path': path('linkedin_post_index')
-        } %}
-        {% set links = links|merge([category_link]) %}
-    {% else %}
-        {% set subMenu = [] %}
-        {% for article in category.articles %}
-            {% set subMenu = subMenu|merge([{
-                'text': article.title,
-                'path': path('article_show', {id: article.id})
-            }]) %}
-        {% endfor %}
-        {% for specialPage in category.specialPages %}
-            {% set subMenu = subMenu|merge([{
-                'text': specialPage.title,
-                'path': path('special_page_show', {slug: specialPage.slug})
-            }]) %}
-        {% endfor %}
-        
-        {% set category_link = {
-            'text': category.name,
-            'path': path('category_show', {slug: category.slug})
-        } %}
-        
-        {% if subMenu|length > 0 %}
-            {% set category_link = category_link|merge({'subMenu': subMenu}) %}
-        {% endif %}
+    {% set subMenu = [] %}
+    {% for article in category.articles %}
+        {% set subMenu = subMenu|merge([{
+            'text': article.title,
+            'path': path('article_show', {id: article.id})
+        }]) %}
+    {% endfor %}
+    {% for specialPage in category.specialPages %}
+        {% set subMenu = subMenu|merge([{
+            'text': specialPage.title,
+            'path': path('special_page_show', {slug: specialPage.slug})
+        }]) %}
+    {% endfor %}
 
-        {% set links = links|merge([category_link]) %}
+    {% set category_link = {
+        'text': category.name,
+        'path': path('category_show', {slug: category.slug})
+    } %}
+
+    {% if subMenu|length > 0 %}
+        {% set category_link = category_link|merge({'subMenu': subMenu}) %}
     {% endif %}
+
+    {% set links = links|merge([category_link]) %}
 {% endfor %}
 
 {% if is_granted('ROLE_ADMIN') %}

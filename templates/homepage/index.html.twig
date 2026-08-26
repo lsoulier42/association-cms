@@ -1,15 +1,13 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}ANDDE - Association Nationale du Don D'Engendrement{% endblock %}
+{% block title %}{{ site_name }}{% endblock %}
 
 {% block main_content %}
     <section class="logo-section mb-5">
-        <div class="logo-container">
-            <div class="acronym">
-                <span>A</span><span>N</span><span>D</span><span>D</span><span>E</span>
-            </div>
+        <div class="logo-container text-center">
+            <img src="{{ asset('images/logo.svg') }}" alt="{{ site_name }}" width="140" height="140" class="mb-3">
             <p class="lead text-uppercase fw-bold" style="letter-spacing: 1px;">
-                Association Nationale du Don D'Engendrement
+                {{ site_name }}
             </p>
         </div>
     </section>
@@ -34,9 +32,9 @@
         </div>
         <div class="col-md-4">
             <div class="p-4 bg-light border-start border-dark border-4">
-                <h2 class="h3 mb-3">L'Association</h2>
-                <p>L’ANDDE a pour but de fédérer les personnes issues de dons (gamètes ou embryons), les parents par don, les donneurs, ainsi que les professionnels de santé et les chercheurs.</p>
-                <a href="#" class="btn btn-dark w-100 text-uppercase">Adhérer à l'ANDDE</a>
+                <h2 class="h3 mb-3">L'association</h2>
+                <p>Présentez ici votre association : sa mission, ses valeurs et ses actions.</p>
+                <a href="{{ path('special_page_show', {slug: 'association'}) }}" class="btn btn-dark w-100 text-uppercase">En savoir plus</a>
             </div>
         </div>
     </div>
