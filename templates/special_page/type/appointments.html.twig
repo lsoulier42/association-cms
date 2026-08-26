@@ -1,0 +1,42 @@
+{% extends 'special_page/show.html.twig' %}
+
+{% block page_content %}
+    {% if appointments is defined and appointments is not empty %}
+        <div class="appointments mt-4">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 150px;">Date</th>
+                            <th style="width: 250px;">Lieu</th>
+                            <th>Sujet</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for appointment in appointments %}
+                            <tr>
+                                <td>
+                                    <span class="badge bg-light text-dark border">
+                                        <i class="far fa-calendar-alt me-1 text-primary"></i>
+                                        {{ appointment.date|date('d/m/Y') }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <strong>{{ appointment.location }}</strong>
+                                </td>
+                                <td>
+                                    {{ appointment.subject|nl2br }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted text-center py-5">
+            <i class="fas fa-calendar-times fa-3x mb-3 d-block opacity-25"></i>
+            Aucun rendez-vous prévu pour le moment.
+        </p>
+    {% endif %}
+{% endblock %}

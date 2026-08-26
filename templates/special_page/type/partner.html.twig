@@ -1,0 +1,47 @@
+{% extends 'special_page/show.html.twig' %}
+
+{% block page_content %}
+    {% if partners is defined and partners is not empty %}
+        <div class="partners mt-4">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+                {% for partner in partners %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0 text-center p-3">
+                            <div class="d-flex align-items-center justify-content-center mb-3" style="height: 80px;">
+                                {% if partner.logo %}
+                                    <img src="{{ partner.logo }}" alt="{{ partner.title }}" style="max-height: 100%; max-width: 100%; object-fit: contain;">
+                                {% else %}
+                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                        <i class="fas fa-handshake fa-2x text-muted opacity-50"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title h6 mb-1">{{ partner.title }}</h5>
+                                {% if partner.subtitle %}
+                                    <div class="small fw-bold text-primary mb-2" style="font-size: 0.8em; line-height: 1.2;">
+                                        {{ partner.subtitle }}
+                                    </div>
+                                {% endif %}
+                                {% if partner.description %}
+                                    <div class="small text-muted mb-3">
+                                        {{ partner.description|raw }}
+                                    </div>
+                                {% endif %}
+                                {% if partner.websiteUrl %}
+                                    <a href="{{ partner.websiteUrl }}" class="btn btn-sm btn-link text-decoration-none" target="_blank" rel="noopener">
+                                        <i class="fas fa-external-link-alt me-1"></i> Site Web
+                                    </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted text-center py-5">
+            Aucun partenaire pour le moment.
+        </p>
+    {% endif %}
+{% endblock %}

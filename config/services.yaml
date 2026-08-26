@@ -2,10 +2,16 @@ parameters:
     locale: fr
     app_env: '%env(APP_ENV)%'
     app_version: '%env(APP_VERSION)%'
+    site_name: '%env(SITE_NAME)%'
 services:
     _defaults:
         autowire: true
         autoconfigure: true
+
+    _instanceof:
+        App\Page\PageTypeInterface:
+            tags: ['app.page_type']
+
     App\:
         resource: '../src/'
         exclude:

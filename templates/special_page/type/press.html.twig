@@ -1,0 +1,46 @@
+{% extends 'special_page/show.html.twig' %}
+
+{% block page_content %}
+    {% if pressMentions is defined and pressMentions is not empty %}
+        <div class="press-mentions mt-4">
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                {% for mention in pressMentions %}
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-body">
+                                <div class="d-flex align-items-center mb-3">
+                                    {% if mention.media and mention.media.logo %}
+                                        <img src="{{ mention.media.logo }}" alt="{{ mention.media.name }}" class="me-3" style="max-height: 40px; max-width: 100px; object-fit: contain;">
+                                    {% elseif mention.media %}
+                                        <span class="badge bg-secondary me-3">{{ mention.media.name }}</span>
+                                    {% endif %}
+                                    <small class="text-muted ms-auto">
+                                        {{ mention.publishedAt ? mention.publishedAt|date('d/m/Y') : mention.createdAt|date('d/m/Y') }}
+                                    </small>
+                                </div>
+                                <h5 class="card-title">
+                                    {% set type_colors = {
+                                        'Article': 'primary',
+                                        'Tribune': 'info',
+                                        'Dépêche': 'secondary',
+                                        'Interview': 'success',
+                                        'Annonce': 'warning'
+                                    } %}
+                                    {% set badge_color = type_colors[mention.type] | default('primary') %}
+                                    <span class="badge bg-{{ badge_color }} me-2" style="font-size: 0.6em; vertical-align: middle;">{{ mention.type }}</span>
+                                    {{ mention.title }}
+                                </h5>
+
+                                <a href="{{ mention.externalLink }}" class="btn btn-outline-primary btn-sm mt-3" target="_blank" rel="noopener">
+                                    Lire l'article
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <p class="text-muted">Aucune mention presse pour le moment.</p>
+    {% endif %}
+{% endblock %}

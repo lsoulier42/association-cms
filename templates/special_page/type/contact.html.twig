@@ -1,0 +1,61 @@
+{% extends 'special_page/show.html.twig' %}
+
+{% block page_content %}
+    {% if association %}
+        <div class="contact-info mt-4">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body p-4">
+                            <h3 class="card-title h4 mb-4 text-center">Nos Coordonnées</h3>
+
+                            <ul class="list-unstyled mb-0 fs-5">
+                                {% if association.address %}
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="fas fa-map-marker-alt text-primary mt-1 me-3" style="width: 25px; text-align: center;"></i>
+                                        <span>{{ association.address|nl2br }}</span>
+                                    </li>
+                                {% endif %}
+
+                                {% if association.phoneNumber %}
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="fas fa-phone-alt text-primary me-3" style="width: 25px; text-align: center;"></i>
+                                        <a href="tel:{{ association.phoneNumber|replace({' ': ''}) }}" class="text-decoration-none text-body">{{ association.phoneNumber }}</a>
+                                    </li>
+                                {% endif %}
+
+                                {% if association.contactEmail %}
+                                    <li class="mb-3 d-flex align-items-center">
+                                        <i class="fas fa-envelope text-primary me-3" style="width: 25px; text-align: center;"></i>
+                                        <a href="mailto:{{ association.contactEmail }}" class="text-decoration-none text-body">{{ association.contactEmail }}</a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+
+                            {% if association.linkedinLink or association.instagramLink %}
+                                <hr class="my-4">
+                                <div class="text-center">
+                                    <h4 class="h5 mb-3">Suivez-nous</h4>
+                                    {% if association.linkedinLink %}
+                                        <a href="{{ association.linkedinLink }}" target="_blank" rel="noopener" class="btn btn-outline-primary rounded-circle mx-1" style="width: 45px; height: 45px; display: inline-flex; align-items: center; justify-content: center;" aria-label="LinkedIn">
+                                            <i class="fa fa-linkedin fa-lg"></i>
+                                        </a>
+                                    {% endif %}
+                                    {% if association.instagramLink %}
+                                        <a href="{{ association.instagramLink }}" target="_blank" rel="noopener" class="btn btn-outline-danger rounded-circle mx-1" style="width: 45px; height: 45px; display: inline-flex; align-items: center; justify-content: center;" aria-label="Instagram">
+                                            <i class="fa fa-instagram fa-lg"></i>
+                                        </a>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="alert alert-warning mt-5" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i> Les informations de contact ne sont pas disponibles pour le moment.
+        </div>
+    {% endif %}
+{% endblock %}
