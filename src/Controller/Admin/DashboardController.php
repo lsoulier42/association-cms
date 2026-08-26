@@ -26,7 +26,7 @@ class DashboardController extends AbstractDashboardController
     public function index(): Response
     {
         $association = $this->associationRepository->getSettings() ?? new Association();
-        
+
         $form = $this->createForm(AssociationType::class, $association);
         $form->handleRequest($this->container->get('request_stack')->getCurrentRequest());
 
@@ -64,8 +64,8 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Administration');
         yield MenuItem::linkToDashboard('Contact', 'fa fa-address-book');
-        yield MenuItem::linkTo(SpecialPageCrudController::class, 'Pages spéciales', 'fa fa-file-lines');
-        yield MenuItem::linkTo(BoardMemberCrudController::class, 'Bureau / CA', 'fa fa-users-viewfinder');
+        yield MenuItem::linkTo(SpecialPageCrudController::class, 'Pages', 'fa fa-file-lines');
+        yield MenuItem::linkTo(TeamMemberCrudController::class, 'Équipe', 'fa fa-users-viewfinder');
         yield MenuItem::linkTo(MediaCrudController::class, 'Médias', 'fa fa-building');
         yield MenuItem::linkTo(UserCrudController::class, 'Utilisateurs', 'fa fa-users');
     }
