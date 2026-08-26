@@ -32,6 +32,36 @@ and deploy for any association.
 - **Content import** — CSV/JSON CLI commands to migrate articles, categories,
   press mentions, users…
 
+## Screenshots
+
+The demo data (`make connect` → `doctrine:fixtures:load`) provides the pages
+below with a realistic placeholder site.
+
+| Homepage | Team page |
+| --- | --- |
+| <img src="docs/screenshots/homepage.png" alt="Homepage" width="720"> | <img src="docs/screenshots/team-page.png" alt="Team page" width="720"> |
+
+| Contact page | Login page |
+| --- | --- |
+| <img src="docs/screenshots/contact-page.png" alt="Contact page" width="720"> | <img src="docs/screenshots/login-page.png" alt="Login page" width="720"> |
+
+## Design
+
+The default theme ships as a clean, centered Bootstrap 5 layout:
+
+- **Typography** — [Epilogue](https://fonts.google.com/specimen/Epilogue)
+  for headings, [Open Sans](https://fonts.google.com/specimen/Open+Sans)
+  for body text (Google Fonts, loaded in `templates/base.html.twig`).
+- **Palette** — design tokens as CSS variables in
+  `assets/styles/app.css`: navy accent `#383a69`, light backgrounds
+  `#f5f5f5` / `#e6e6e9`, dark text, amber highlight `#f0ad4e` (logo).
+- **Components** — dark navbar, card grids (news, team, partners, press),
+  bordered sections, rounded buttons; Font Awesome 4 icons.
+- **Customize** — edit the `:root` variables in `assets/styles/app.css`,
+  the navbar in `templates/layout/_header.html.twig` and replace
+  `public/images/logo.svg` / `public/images/favicon.svg` to rebrand the
+  whole site.
+
 ## Tech stack
 
 | Component  | Version        |
